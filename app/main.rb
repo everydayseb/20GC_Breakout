@@ -8,6 +8,43 @@ class Game
 
   def tick
     canvas.background_color = [BGCOLOUR.r, BGCOLOUR.g, BGCOLOUR.b]
+    state.current_scene ||= :game_scene
+    # capture the current scene to verify it didn't change through
+    # the duration of tick
+    current_scene = state.current_scene
+
+    # tick whichever scene is current
+    case current_scene
+    when :title_scene
+      tick_title_scene
+    when :game_scene
+      tick_game_scene
+    when :game_over_scene
+      tick_game_over_scene
+    end
+
+    # make sure that the current_scene flag wasn't set mid tick
+    if state.current_scene != current_scene
+      raise "Scene was changed incorrectly. Set state.next_scene to change scenes."
+    end
+
+    # if next scene was set/requested, then transition the current scene to the next scene
+    if state.next_scene
+      state.current_scene = state.next_scene
+      state.next_scene = nil
+    end
+  end
+
+  def tick_title_scene
+    # TODO: main menu scene
+  end
+
+  def tick_game_scene
+    canvas.labels << sm_label.merge(text: 'Hello World', **FGCOLOUR)
+  end
+
+  def tick_game_over_scene
+    # TODO: lose and restart scene
   end
 
   def sm_label

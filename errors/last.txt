@@ -1,4 +1,5 @@
-* EXCEPTION: uninitialized constant Game::BGCOLOR
+* EXCEPTION: 'tick_game_scene': wrong number of arguments (0 for 1)
 ** Backtrace:
-*** app/main.rb:10:in tick
+*** app/main.rb:38:in tick_game_scene
+*** app/main.rb:21:in tick
 *** app/scaler.rb:50:in tick
