@@ -1,10 +1,13 @@
 require "app/scaler.rb"
 
+BGCOLOUR = {r: 171, g: 194, b: 192}
+FGCOLOUR = {r: 36, g: 23, b: 38}
+
 class Game
   attr :args, :mouse_position
 
   def tick
-    canvas.background_color = [171, 194, 192]
+    canvas.background_color = [BGCOLOUR.r, BGCOLOUR.g, BGCOLOUR.b]
   end
 
   def sm_label

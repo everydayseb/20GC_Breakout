@@ -1,0 +1,4 @@
+* EXCEPTION: uninitialized constant Game::BGCOLOR
+** Backtrace:
+*** app/main.rb:10:in tick
+*** app/scaler.rb:50:in tick
