@@ -42,6 +42,7 @@ class Game
   def tick_game_scene
     defaults
     render
+    calc_player
   end
 
   def tick_game_over_scene
@@ -59,6 +60,11 @@ class Game
   def render
     canvas.sprites << state.walls
     canvas.sprites << state.player
+  end
+
+  def calc_player
+    state.player.x = state.player.x.lerp(mouse_position.x, 0.1).clamp(6 + state.player.w/2, PIXEL_WIDTH - 6 - state.player.w/2)
+    state.player.x = state.player.x.clamp(6, PIXEL_WIDTH - 6)
   end
 
   def sm_label
