@@ -36,16 +36,19 @@ class Game
   end
 
   def tick_title_scene
+    GTK.set_mouse_grab 0
     # TODO: main menu scene
   end
 
   def tick_game_scene
+    GTK.set_mouse_grab 2
     defaults
     render
     calc_player
   end
 
   def tick_game_over_scene
+    GTK.set_mouse_grab 0
     # TODO: lose and restart scene
   end
 
