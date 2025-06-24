@@ -40,11 +40,25 @@ class Game
   end
 
   def tick_game_scene
-    canvas.labels << sm_label.merge(text: 'Hello World', **FGCOLOUR)
+    defaults
+    render
   end
 
   def tick_game_over_scene
     # TODO: lose and restart scene
+  end
+
+  def defaults
+    WALL_WIDTH ||= 3
+    SIDE_WALL ||= {y: 0, w: WALL_WIDTH, h: PIXEL_HEIGHT - WALL_WIDTH, **FGCOLOUR}
+    CEILING ||= {x: WALL_WIDTH, y: PIXEL_HEIGHT - 6, w: PIXEL_WIDTH - 6, h: WALL_WIDTH, **FGCOLOUR}
+    state.walls ||= [SIDE_WALL.merge(x: WALL_WIDTH), SIDE_WALL.merge(x: PIXEL_WIDTH - 6), CEILING]
+    state.player ||= {x: PIXEL_WIDTH / 2, y: 12, w: 32, h: 6, path: :solid, anchor_x: 0.5, anchor_y: 0.5, **FGCOLOUR}
+  end
+
+  def render
+    canvas.sprites << state.walls
+    canvas.sprites << state.player
   end
 
   def sm_label

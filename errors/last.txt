@@ -1,5 +1,19 @@
-* EXCEPTION: 'tick_game_scene': wrong number of arguments (0 for 1)
+* EXCEPTION:
+* ERROR - :solid method missing on ~Game~.
+
+#+begin_src ~Game#inspect~
+#<Game:0xf9c6f50 @mouse_position={:x=>314, :y=>-1, :w=>1, :h=>1}, @args=#<GTK::Args:0xf889800>>
+#+end_src ~Game#inspect~
+
+
+
+The method named
+  :solid
+doesn't exist on [Game, #<Class:#<Game:0xf9c6f50>>].
+
+(suggestions above)
 ** Backtrace:
-*** app/main.rb:38:in tick_game_scene
+*** app/main.rb:55:in defaults
+*** app/main.rb:43:in tick_game_scene
 *** app/main.rb:21:in tick
 *** app/scaler.rb:50:in tick
