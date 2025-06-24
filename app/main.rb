@@ -41,10 +41,11 @@ class Game
   end
 
   def tick_game_scene
-    GTK.set_mouse_grab 2
+    #GTK.set_mouse_grab 2
     defaults
     render
     calc_player
+    calc_bricks
   end
 
   def tick_game_over_scene
@@ -58,15 +59,45 @@ class Game
     CEILING ||= {x: WALL_WIDTH, y: PIXEL_HEIGHT - 6, w: PIXEL_WIDTH - 6, h: WALL_WIDTH, **FGCOLOUR}
     state.walls ||= [SIDE_WALL.merge(x: WALL_WIDTH), SIDE_WALL.merge(x: PIXEL_WIDTH - 6), CEILING]
     state.player ||= {x: PIXEL_WIDTH / 2, y: 12, w: 32, h: 6, path: :solid, anchor_x: 0.5, anchor_y: 0.5, **FGCOLOUR}
+    state.bricks ||= []
   end
 
   def render
     canvas.sprites << state.walls
     canvas.sprites << state.player
+    canvas.sprites << state.bricks
   end
 
   def calc_player
     state.player.x = state.player.x.lerp(mouse_position.x, 0.1).clamp(6 + state.player.w/2, PIXEL_WIDTH - 6 - state.player.w/2)
+  end
+
+  def calc_bricks
+    # generate bricks if new game and there are none
+    # destroy any bricks flagged :destroy, play effects
+    
+    # generate bricks
+    MAX_COLUMNS ||= 9
+    MAX_ROWS ||= 8
+    col ||= 0
+    row ||= 0
+    if state.bricks.length < MAX_COLUMNS * MAX_ROWS
+      MAX_ROWS.times do
+        MAX_COLUMNS.times do
+          state.bricks << brick_prefab(col * 33 + 12, 11 * row + 81)
+          col += 1
+        end
+        col = 0
+        row +=1 
+      end
+    end
+
+    # destroy bricks
+    state.bricks.reject! {|brick| brick.destroyed}
+  end
+
+  def brick_prefab x, y
+    { x: x, y: y, w: 32, h: 10, path: :solid, **FGCOLOUR }
   end
 
   def sm_label
