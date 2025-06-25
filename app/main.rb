@@ -55,7 +55,7 @@ class Game
 
   def defaults
     WALL_WIDTH ||= 3
-    SIDE_WALL ||= {y: 0, w: WALL_WIDTH, h: PIXEL_HEIGHT - WALL_WIDTH, **FGCOLOUR}
+    SIDE_WALL ||= {y: 3, w: WALL_WIDTH, h: PIXEL_HEIGHT - WALL_WIDTH * 2, **FGCOLOUR}
     CEILING ||= {x: WALL_WIDTH, y: PIXEL_HEIGHT - 6, w: PIXEL_WIDTH - 6, h: WALL_WIDTH, **FGCOLOUR}
     state.walls ||= [SIDE_WALL.merge(x: WALL_WIDTH), SIDE_WALL.merge(x: PIXEL_WIDTH - 6), CEILING]
     state.player ||= {x: PIXEL_WIDTH / 2, y: 12, w: 32, h: 6, path: :solid, anchor_x: 0.5, anchor_y: 0.5, **FGCOLOUR}
