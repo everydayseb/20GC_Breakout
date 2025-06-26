@@ -57,16 +57,17 @@ class Game
   def defaults
     WALL_WIDTH ||= 3
     SIDE_WALL ||= {y: 3, w: WALL_WIDTH, h: PIXEL_HEIGHT - WALL_WIDTH * 2, **FGCOLOUR}
-    CEILING ||= {x: WALL_WIDTH, y: PIXEL_HEIGHT - 6, w: PIXEL_WIDTH - 6, h: WALL_WIDTH, **FGCOLOUR}
-    state.walls ||= [SIDE_WALL.merge(x: WALL_WIDTH), SIDE_WALL.merge(x: PIXEL_WIDTH - 6), CEILING]
+    state.walls ||= [SIDE_WALL.merge(x: WALL_WIDTH), SIDE_WALL.merge(x: PIXEL_WIDTH - 6)]
+    state.ceiling ||= {x: WALL_WIDTH, y: PIXEL_HEIGHT - 6, w: PIXEL_WIDTH - 6, h: WALL_WIDTH, **FGCOLOUR}
     state.player ||= {x: PIXEL_WIDTH / 2, y: 12, w: 32, h: 6, path: :solid, anchor_x: 0.5, anchor_y: 0.5, **FGCOLOUR}
     state.bricks ||= []
-    state.ball ||= {x: PIXEL_WIDTH / 2, y: 40, w: 4, h: 4, path: 'sprites/ball.png', **FGCOLOUR, anchor_x: 0.5, anchor_y: 0.5, dx: 0, dy: -1, speed: 1}
+    state.ball ||= {x: PIXEL_WIDTH / 2, y: 40, w: 4, h: 4, path: 'sprites/ball.png', **FGCOLOUR, anchor_x: 0.5, anchor_y: 0.5, dx: 0, dy: -1, speedx: 0, speedy: -2}
     state.level_loaded ||= false
     state.ball_in_play ||= false
   end
 
   def render
+    canvas.sprites << state.ceiling
     canvas.sprites << state.walls
     canvas.sprites << state.player
     canvas.sprites << state.bricks
@@ -117,8 +118,30 @@ class Game
   def calc_ball
     return unless state.ball_in_play
 
-    state.ball.x += state.ball.dx * state.ball.speed
-    state.ball.y += state.ball.dy * state.ball.speed
+    state.ball.x += state.ball.speedx
+    state.ball.y += state.ball.speedy
+
+    state.walls.each do |wall|
+      if state.ball.intersect_rect? wall
+        state.ball.speedx *= -1
+      end
+    end
+
+    if state.ball.intersect_rect? state.ceiling
+      state.ball.speedy *= -1
+    end
+
+    if state.ball.intersect_rect? state.player
+      state.ball.speedx += -((state.ball.x - state.player.x) * 0.1) * -1
+      state.ball.speedy *= -1
+    end
+
+    state.bricks.each do |brick|
+      if state.ball.intersect_rect? brick
+        brick.destroyed = true
+        state.ball.speedy *= -1
+      end
+    end
 
   end
 
