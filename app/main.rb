@@ -61,7 +61,7 @@ class Game
     state.walls ||= [SIDE_WALL.merge(x: WALL_WIDTH), SIDE_WALL.merge(x: PIXEL_WIDTH - 6), CEILING]
     state.player ||= {x: PIXEL_WIDTH / 2, y: 12, w: 32, h: 6, path: :solid, anchor_x: 0.5, anchor_y: 0.5, **FGCOLOUR}
     state.bricks ||= []
-    state.ball ||= {x: PIXEL_WIDTH / 2, y: 40, w: 3, h: 3, path: :solid, **FGCOLOUR, anchor_x: 0.5, anchor_y: 0.5, dx: 0, dy: -1, speed: 1}
+    state.ball ||= {x: PIXEL_WIDTH / 2, y: 40, w: 4, h: 4, path: 'sprites/ball.png', **FGCOLOUR, anchor_x: 0.5, anchor_y: 0.5, dx: 0, dy: -1, speed: 1}
     state.level_loaded ||= false
     state.ball_in_play ||= false
   end
