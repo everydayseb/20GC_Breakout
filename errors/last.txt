@@ -1,21 +1,21 @@
 * EXCEPTION:
-* ERROR - :reject! method missing on ~Enumerator~.
+* ERROR - :calc_ball method missing on ~Game~.
 
-#+begin_src ~Enumerator#inspect~
-#<Enumerator: [{:x=>12, :y=>81, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>45, :y=>81, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>78, :y=>81, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>111, :y=>81, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>144, :y=>81, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>177, :y=>81, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>210, :y=>81, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>243, :y=>81, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>276, :y=>81, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>12, :y=>92, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>45, :y=>92, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>78, :y=>92, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>111, :y=>92, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>144, :y=>92, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>177, :y=>92, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>210, :y=>92, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>243, :y=>92, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>276, :y=>92, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>12, :y=>103, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>45, :y=>103, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>78, :y=>103, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>111, :y=>103, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>144, :y=>103, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>177, :y=>103, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>210, :y=>103, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>243, :y=>103, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>276, :y=>103, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>12, :y=>114, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>45, :y=>114, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>78, :y=>114, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>111, :y=>114, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>144, :y=>114, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>177, :y=>114, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>210, :y=>114, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>243, :y=>114, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>276, :y=>114, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>12, :y=>125, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>45, :y=>125, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>78, :y=>125, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>111, :y=>125, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>144, :y=>125, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>177, :y=>125, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>210, :y=>125, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>243, :y=>125, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>276, :y=>125, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>12, :y=>136, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>45, :y=>136, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>78, :y=>136, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>111, :y=>136, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>144, :y=>136, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>177, :y=>136, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>210, :y=>136, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>243, :y=>136, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>276, :y=>136, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>12, :y=>147, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>45, :y=>147, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>78, :y=>147, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>111, :y=>147, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>144, :y=>147, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>177, :y=>147, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>210, :y=>147, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>243, :y=>147, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>276, :y=>147, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>12, :y=>158, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>45, :y=>158, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>78, :y=>158, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>111, :y=>158, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>144, :y=>158, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>177, :y=>158, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>210, :y=>158, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>243, :y=>158, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}, {:x=>276, :y=>158, :w=>32, :h=>10, :path=>:solid, :r=>36, :g=>23, :b=>38}]:each>
-#+end_src ~Enumerator#inspect~
+#+begin_src ~Game#inspect~
+#<Game:0x7ad8d863f070 @mouse_position={:x=>99, :y=>179, :w=>1, :h=>1}, @args=#<GTK::Args:0x3bd133c0>>
+#+end_src ~Game#inspect~
 
 ** Did you mean?
-Here's a list of methods that kind of look like :reject!.
-*** :reject
+Here's a list of methods that kind of look like :calc_ball.
+*** :calc_bricks
+*** :calc_player
 
 The method named
-  :reject!
-doesn't exist on [Enumerator, #<Class:#<Enumerator:0x78ac203d7b00>>, Enumerable].
+  :calc_ball
+doesn't exist on [Game, #<Class:#<Game:0x7ad8d863f070>>].
 
 (suggestions above)
 ** Backtrace:
-*** app/main.rb:96:in calc_bricks
-*** app/main.rb:48:in tick_game_scene
+*** app/main.rb:49:in tick_game_scene
 *** app/main.rb:21:in tick
 *** app/scaler.rb:50:in tick

@@ -46,6 +46,7 @@ class Game
     render
     calc_player
     calc_bricks
+    calc_ball
   end
 
   def tick_game_over_scene
@@ -60,15 +61,25 @@ class Game
     state.walls ||= [SIDE_WALL.merge(x: WALL_WIDTH), SIDE_WALL.merge(x: PIXEL_WIDTH - 6), CEILING]
     state.player ||= {x: PIXEL_WIDTH / 2, y: 12, w: 32, h: 6, path: :solid, anchor_x: 0.5, anchor_y: 0.5, **FGCOLOUR}
     state.bricks ||= []
+    state.ball ||= {x: PIXEL_WIDTH / 2, y: 40, w: 3, h: 3, path: :solid, **FGCOLOUR, anchor_x: 0.5, anchor_y: 0.5, dx: 0, dy: -1, speed: 1}
+    state.level_loaded ||= false
+    state.ball_in_play ||= false
   end
 
   def render
     canvas.sprites << state.walls
     canvas.sprites << state.player
     canvas.sprites << state.bricks
+    canvas.sprites << state.ball
+
+    args.outputs.watch "FPS: #{GTK.current_framerate.to_sf}"
+    args.outputs.watch "Number of bricks #{state.bricks.length}"
   end
 
   def calc_player
+    if !state.ball_in_play
+      state.ball_in_play = true if inputs.mouse.buttons.left.click
+    end
     state.player.x = state.player.x.lerp(mouse_position.x, 0.1).clamp(6 + state.player.w/2, PIXEL_WIDTH - 6 - state.player.w/2)
   end
 
@@ -76,28 +87,43 @@ class Game
     # generate bricks if new game and there are none
     # destroy any bricks flagged :destroy, play effects
     
-    # generate bricks
-    MAX_COLUMNS ||= 9
-    MAX_ROWS ||= 8
-    col ||= 0
-    row ||= 0
-    if state.bricks.length < MAX_COLUMNS * MAX_ROWS
-      MAX_ROWS.times do
-        MAX_COLUMNS.times do
-          state.bricks << brick_prefab(col * 33 + 12, 11 * row + 81)
-          col += 1
-        end
-        col = 0
-        row +=1 
-      end
-    end
+    generate_bricks if !state.level_loaded
 
     # destroy bricks
     state.bricks.reject! {|brick| brick.destroyed}
   end
 
-  def brick_prefab x, y
-    { x: x, y: y, w: 32, h: 10, path: :solid, **FGCOLOUR }
+  def generate_bricks
+    return if state.level_loaded
+    MAX_COLUMNS ||= 9
+    MAX_ROWS ||= 8
+    X_OFFSET ||= 12
+    Y_OFFSET ||= 81
+    column ||= 0
+    row ||= 0
+
+    while row < MAX_ROWS
+      while column < MAX_COLUMNS
+        state.bricks << brick_prefab.merge(x: 33 * column + X_OFFSET, y: 11 * row + Y_OFFSET)
+        column += 1
+      end
+      column = 0
+      row += 1
+    end
+
+    state.level_loaded = true
+  end
+
+  def calc_ball
+    return unless state.ball_in_play
+
+    state.ball.x += state.ball.dx * state.ball.speed
+    state.ball.y += state.ball.dy * state.ball.speed
+
+  end
+
+  def brick_prefab
+    { x: 0, y: 0, w: 32, h: 10, path: :solid, **FGCOLOUR }
   end
 
   def sm_label
