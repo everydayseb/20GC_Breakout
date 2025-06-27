@@ -7,6 +7,7 @@ class Game
   attr :args, :mouse_position
 
   def tick
+    #GTK.slowmo! 4
     canvas.background_color = [BGCOLOUR.r, BGCOLOUR.g, BGCOLOUR.b]
     state.current_scene ||= :game_scene
     # capture the current scene to verify it didn't change through
@@ -118,6 +119,9 @@ class Game
   def calc_ball
     return unless state.ball_in_play
 
+    state.ball.prevx = state.ball.x
+    state.ball.prevy = state.ball.y
+
     state.ball.x += state.ball.speedx
     state.ball.y += state.ball.speedy
 
@@ -132,6 +136,7 @@ class Game
     end
 
     if state.ball.intersect_rect? state.player
+      #increase the reflection towards the edges of the paddle
       state.ball.speedx += -((state.ball.x - state.player.x) * 0.1) * -1
       state.ball.speedy *= -1
     end
@@ -139,7 +144,12 @@ class Game
     state.bricks.each do |brick|
       if state.ball.intersect_rect? brick
         brick.destroyed = true
-        state.ball.speedy *= -1
+
+        if state.ball.y <= brick.y || state.ball.y >= brick.y + brick.h
+          state.ball.speedy *= -1
+        else
+          state.ball.speedx *= -1
+        end
       end
     end
 
