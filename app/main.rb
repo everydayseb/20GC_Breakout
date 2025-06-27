@@ -119,9 +119,6 @@ class Game
   def calc_ball
     return unless state.ball_in_play
 
-    state.ball.prevx = state.ball.x
-    state.ball.prevy = state.ball.y
-
     state.ball.x += state.ball.speedx
     state.ball.y += state.ball.speedy
 
