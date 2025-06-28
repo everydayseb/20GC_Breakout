@@ -62,9 +62,17 @@ class Game
     state.ceiling ||= {x: WALL_WIDTH, y: PIXEL_HEIGHT - 6, w: PIXEL_WIDTH - 6, h: WALL_WIDTH, **FGCOLOUR}
     state.player ||= {x: PIXEL_WIDTH / 2, y: 12, w: 32, h: 6, path: :solid, anchor_x: 0.5, anchor_y: 0.5, **FGCOLOUR}
     state.bricks ||= []
-    state.ball ||= {x: PIXEL_WIDTH / 2, y: 40, w: 4, h: 4, path: 'sprites/ball.png', **FGCOLOUR, anchor_x: 0.5, anchor_y: 0.5, dx: 0, dy: -1, speedx: 0, speedy: -2}
+    state.ball ||= {x: PIXEL_WIDTH / 2, y: 40, w: 4, h: 4, path: 'sprites/ball.png', 
+                    **FGCOLOUR, anchor_x: 0.5, anchor_y: 0.5, dx: 0, dy: -1, 
+                    speedx: 0, speedy: -2, bounces: 0}
     state.level_loaded ||= false
     state.ball_in_play ||= false
+    state.sfx ||= {blip: 'sounds/blip.wav', paddle: 'sounds/c.wav',
+                  bounce: ['sounds/c.wav', 'sounds/d.wav', 'sounds/e.wav', 
+                          'sounds/f.wav', 'sounds/g.wav', 'sounds/a.wav', 
+                          'sounds/b.wav', 'sounds/c2.wav', 'sounds/d2.wav', 
+                          'sounds/e2.wav', 'sounds/f2.wav', 'sounds/g2.wav', 
+                          'sounds/a2.wav', 'sounds/b2.wav', 'sounds/c2.wav'],}
   end
 
   def render
@@ -125,21 +133,38 @@ class Game
     state.walls.each do |wall|
       if state.ball.intersect_rect? wall
         state.ball.speedx *= -1
+
+        state.ball.bounces += 1
+
+        play_bounce_sfx
+
       end
     end
 
     if state.ball.intersect_rect? state.ceiling
       state.ball.speedy *= -1
+
+      state.ball.bounces += 1
+
+      play_bounce_sfx
     end
 
     if state.ball.intersect_rect? state.player
       #increase the reflection towards the edges of the paddle
       state.ball.speedx += -((state.ball.x - state.player.x) * 0.1) * -1
       state.ball.speedy *= -1
+
+      #reset bounce bounter (for selecting sfx)
+      state.ball.bounces = 0
+
+      play_bounce_sfx
     end
 
     state.bricks.each do |brick|
       if state.ball.intersect_rect? brick
+
+        play_bounce_sfx
+
         brick.destroyed = true
 
         if state.ball.y <= brick.y || state.ball.y >= brick.y + brick.h
@@ -154,6 +179,16 @@ class Game
 
   def brick_prefab
     { x: 0, y: 0, w: 32, h: 10, path: :solid, **FGCOLOUR }
+  end
+
+  def play_bounce_sfx
+    outputs.sounds << current_bounce_sfx
+  end
+
+  def current_bounce_sfx
+    num_of_bounces = state.ball.bounces
+    total_bounce_sfxs = state.sfx.bounce.length
+    state.sfx.bounce[num_of_bounces < total_bounce_sfxs ? num_of_bounces : total_bounce_sfxs]
   end
 
   def sm_label

@@ -1,19 +1,21 @@
 * EXCEPTION:
-* ERROR - :speedx method missing on ~Game~.
+* ERROR - :bnum_of_bounces method missing on ~Game~.
 
 #+begin_src ~Game#inspect~
-#<Game:0x3e41edb0 @mouse_position={:x=>125, :y=>53, :w=>1, :h=>1}, @args=#<GTK::Args:0x3e2f0c40>>
+#<Game:0x7e6c1c43c6a0 @mouse_position={:x=>173, :y=>39, :w=>1, :h=>1}, @args=#<GTK::Args:0x399e3d60>>
 #+end_src ~Game#inspect~
 
 
 
 The method named
-  :speedx
-doesn't exist on [Game, #<Class:#<Game:0x3e41edb0>>].
+  :bnum_of_bounces
+doesn't exist on [Game, #<Class:#<Game:0x7e6c1c43c6a0>>].
 
 (suggestions above)
 ** Backtrace:
-*** app/main.rb:155:in calc_ball
+*** app/main.rb:180:in current_bounce_sfx
+*** app/main.rb:159:in calc_ball
+*** app/main.rb:156:in calc_ball
 *** app/main.rb:50:in tick_game_scene
 *** app/main.rb:22:in tick
 *** app/scaler.rb:50:in tick
