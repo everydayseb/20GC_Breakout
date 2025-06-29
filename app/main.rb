@@ -44,6 +44,7 @@ class Game
   def tick_game_scene
     #GTK.set_mouse_grab 2
     defaults
+    create_player_sprite
     render
     calc_player
     calc_bricks
@@ -60,11 +61,26 @@ class Game
     SIDE_WALL ||= {y: 3, w: WALL_WIDTH, h: PIXEL_HEIGHT - WALL_WIDTH * 2, **FGCOLOUR}
     state.walls ||= [SIDE_WALL.merge(x: WALL_WIDTH), SIDE_WALL.merge(x: PIXEL_WIDTH - 6)]
     state.ceiling ||= {x: WALL_WIDTH, y: PIXEL_HEIGHT - 6, w: PIXEL_WIDTH - 6, h: WALL_WIDTH, **FGCOLOUR}
-    state.player ||= {x: PIXEL_WIDTH / 2, y: 12, w: 32, h: 6, path: :solid, anchor_x: 0.5, anchor_y: 0.5, **FGCOLOUR}
+    state.player ||= {
+      x: PIXEL_WIDTH / 2, y: 12, 
+      w: 32, h: 12, 
+      path: :player_group, 
+      anchor_x: 0.5, 
+      anchor_y: 0.5, 
+      **FGCOLOUR,
+      lives: 3
+    }
     state.bricks ||= []
-    state.ball ||= {x: PIXEL_WIDTH / 2, y: 40, w: 4, h: 4, path: 'sprites/ball.png', 
-                    **FGCOLOUR, anchor_x: 0.5, anchor_y: 0.5, dx: 0, dy: -1, 
-                    speedx: 0, speedy: -2, bounces: 0}
+    state.ball ||= {
+      x: PIXEL_WIDTH / 2, y: 40,
+      w: 4, h: 4,
+      path: 'sprites/ball.png',
+      anchor_x: 0.5, anchor_y: 0.5,
+      **FGCOLOUR, 
+      dx: 0, dy: -1, 
+      speedx: 0, speedy: -2, 
+      bounces: 0,
+    }
     state.level_loaded ||= false
     state.ball_in_play ||= false
     state.sfx ||= {blip: 'sounds/blip.wav', paddle: 'sounds/c.wav',
@@ -84,6 +100,7 @@ class Game
 
     args.outputs.watch "FPS: #{GTK.current_framerate.to_sf}"
     args.outputs.watch "Number of bricks #{state.bricks.length}"
+    args.outputs.watch "Number of bounces: #{state.ball.bounces}"
   end
 
   def calc_player
@@ -163,6 +180,8 @@ class Game
     state.bricks.each do |brick|
       if state.ball.intersect_rect? brick
 
+        state.ball.bounces += 1
+
         play_bounce_sfx
 
         brick.destroyed = true
@@ -175,6 +194,55 @@ class Game
       end
     end
 
+    if state.ball.y + state.ball.h < 0 
+      state.ball_in_play = false
+      state.ball = {
+        x: PIXEL_WIDTH / 2, y: 40,
+        w: 4, h: 4,
+        path: 'sprites/ball.png',
+        anchor_x: 0.5, anchor_y: 0.5,
+        **FGCOLOUR, 
+        dx: 0, dy: -1, 
+        speedx: 0, speedy: -2, 
+        bounces: 0,
+      }
+      state.player.lives -= 1
+
+    end
+
+  end
+
+  def create_player_sprite    
+    # create player sprite
+    canvas[:player_group].w = 32
+    canvas[:player_group].h = 12
+
+    canvas[:player_group].background_color = [0, 0, 0, 0]
+
+    number_of_lives =  state.player.lives
+
+    life_sprites ||= Array.new(number_of_lives)
+
+    life_sprites.map!.with_index do |sprite, i|
+      sprite = { 
+        x: 3 * i,
+        y: 0,
+        w: 2, h: 2,
+        path: :solid,
+        **FGCOLOUR
+      }
+    end
+
+    canvas[:player_group] << life_sprites
+
+    canvas[:player_group] << {
+      x: 0, y: 4, 
+      w: 32, h: 6, 
+      path: :solid,
+      **FGCOLOUR,
+      lives: 3
+    }
+
   end
 
   def brick_prefab
@@ -186,9 +254,8 @@ class Game
   end
 
   def current_bounce_sfx
-    num_of_bounces = state.ball.bounces
-    total_bounce_sfxs = state.sfx.bounce.length
-    state.sfx.bounce[num_of_bounces < total_bounce_sfxs ? num_of_bounces : total_bounce_sfxs]
+    num_of_bounces = state.ball.bounces.clamp(0, state.sfx.bounce.length - 1)
+    state.sfx.bounce[num_of_bounces]
   end
 
   def sm_label

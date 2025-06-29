@@ -1,21 +1,15 @@
 * EXCEPTION:
-* ERROR - :bnum_of_bounces method missing on ~Game~.
+* ERROR - :path method missing on ~NilClass~.
 
-#+begin_src ~Game#inspect~
-#<Game:0x7e6c1c43c6a0 @mouse_position={:x=>173, :y=>39, :w=>1, :h=>1}, @args=#<GTK::Args:0x399e3d60>>
-#+end_src ~Game#inspect~
+#+begin_src ~NilClass#inspect~
+nil
+#+end_src ~NilClass#inspect~
 
 
 
 The method named
-  :bnum_of_bounces
-doesn't exist on [Game, #<Class:#<Game:0x7e6c1c43c6a0>>].
+  :path
+doesn't exist on [NilClass, NilClassFalseClass].
 
 (suggestions above)
 ** Backtrace:
-*** app/main.rb:180:in current_bounce_sfx
-*** app/main.rb:159:in calc_ball
-*** app/main.rb:156:in calc_ball
-*** app/main.rb:50:in tick_game_scene
-*** app/main.rb:22:in tick
-*** app/scaler.rb:50:in tick
