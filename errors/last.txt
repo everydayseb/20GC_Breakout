@@ -1,15 +1,6 @@
-* EXCEPTION:
-* ERROR - :path method missing on ~NilClass~.
-
-#+begin_src ~NilClass#inspect~
-nil
-#+end_src ~NilClass#inspect~
-
-
-
-The method named
-  :path
-doesn't exist on [NilClass, NilClassFalseClass].
-
-(suggestions above)
+* EXCEPTION: negative array size
 ** Backtrace:
+*** app/main.rb:227:in create_player_sprite
+*** app/main.rb:47:in tick_game_scene
+*** app/main.rb:22:in tick
+*** app/scaler.rb:50:in tick

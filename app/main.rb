@@ -105,7 +105,10 @@ class Game
 
   def calc_player
     if !state.ball_in_play
-      state.ball_in_play = true if inputs.mouse.buttons.left.click
+      if inputs.mouse.buttons.left.click
+        state.ball_in_play = true 
+        outputs.sounds << state.sfx[:blip]
+      end
     end
     state.player.x = state.player.x.lerp(mouse_position.x, 0.1).clamp(6 + state.player.w/2, PIXEL_WIDTH - 6 - state.player.w/2)
   end
@@ -206,8 +209,8 @@ class Game
         speedx: 0, speedy: -2, 
         bounces: 0,
       }
-      state.player.lives -= 1
 
+      state.player.lives -= 1 unless state.player.lives == 0
     end
 
   end
