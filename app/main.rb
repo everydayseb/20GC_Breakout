@@ -54,6 +54,9 @@ class Game
   def tick_game_over_scene
     GTK.set_mouse_grab 0
     # TODO: lose and restart scene
+    state.rect_filled_at ||= 0
+    render
+    play_game_over_animation
   end
 
   def defaults
@@ -81,6 +84,7 @@ class Game
       speedx: 0, speedy: -2, 
       bounces: 0,
     }
+    state.game_over ||= false
     state.level_loaded ||= false
     state.ball_in_play ||= false
     state.sfx ||= {blip: 'sounds/blip.wav', paddle: 'sounds/c.wav',
@@ -92,11 +96,11 @@ class Game
   end
 
   def render
+    canvas.sprites << state.player
     canvas.sprites << state.ceiling
     canvas.sprites << state.walls
-    canvas.sprites << state.player
     canvas.sprites << state.bricks
-    canvas.sprites << state.ball
+    canvas.sprites << state.ball unless state.game_over
 
     args.outputs.watch "FPS: #{GTK.current_framerate.to_sf}"
     args.outputs.watch "Number of bricks #{state.bricks.length}"
@@ -210,6 +214,11 @@ class Game
         bounces: 0,
       }
 
+      if state.player.lives == 0
+        state.game_over = true
+        state.next_scene = :game_over_scene 
+      end
+
       state.player.lives -= 1 unless state.player.lives == 0
     end
 
@@ -259,6 +268,24 @@ class Game
   def current_bounce_sfx
     num_of_bounces = state.ball.bounces.clamp(0, state.sfx.bounce.length - 1)
     state.sfx.bounce[num_of_bounces]
+  end
+
+  def play_game_over_animation
+    if state.ceiling.h < state.walls[0].h
+      state.ceiling.h += 2
+      state.ceiling.y -= 2
+    else
+      state.rect_filled_at = Kernel.tick_count if state.rect_filled_at == 0
+      if state.rect_filled_at.elapsed_time > 30
+        canvas.labels << lg_label.merge(x: 97, y: 100, text: "GAME", **BGCOLOUR)
+      end
+      if state.rect_filled_at.elapsed_time > 60
+        canvas.labels << lg_label.merge(x: 166, y: 100, text: "OVER", **BGCOLOUR)
+      end
+      if state.rect_filled_at.elapsed_time > 90
+        canvas.primitives << {x: PIXEL_WIDTH / 2, y: 70, w: 124, h: 60, path: :solid, **BGCOLOUR, anchor_x: 0.5, anchor_y: 0.5}
+      end
+    end
   end
 
   def sm_label
