@@ -2,6 +2,7 @@ require "app/scaler.rb"
 
 BGCOLOUR = {r: 171, g: 194, b: 192}
 FGCOLOUR = {r: 36, g: 23, b: 38}
+HIGH_SCORE_FILE = "high_score.txt"
 
 class Game
   attr :args, :mouse_position
@@ -53,17 +54,28 @@ class Game
 
   def tick_game_over_scene
     GTK.set_mouse_grab 0
-    # TODO: lose and restart scene
+    state.hiscore ||= args.gtk.read_file(HIGH_SCORE_FILE).to_i
+
+    if !state.saved_hiscore && state.score > state.hiscore
+      args.gtk.write_file(HIGH_SCORE_FILE, state.score.to_s)
+      state.saved_hiscore = true
+    end
+
     state.rect_filled_at ||= 0
     render
     play_game_over_animation
+
+    if state.game_over_finished
+      canvas.labels << sm_label.merge(x: 160, y: 83, text: "Score: #{state.score}    High: #{state.hiscore}",
+      **FGCOLOUR, anchor_x: 0.5, )
+    end
   end
 
   def defaults
     WALL_WIDTH ||= 3
     SIDE_WALL ||= {y: 3, w: WALL_WIDTH, h: PIXEL_HEIGHT - WALL_WIDTH * 2, **FGCOLOUR}
     state.walls ||= [SIDE_WALL.merge(x: WALL_WIDTH), SIDE_WALL.merge(x: PIXEL_WIDTH - 6)]
-    state.ceiling ||= {x: WALL_WIDTH, y: PIXEL_HEIGHT - 6, w: PIXEL_WIDTH - 6, h: WALL_WIDTH, **FGCOLOUR}
+    state.ceiling ||= {x: WALL_WIDTH, y: PIXEL_HEIGHT - 6, w: PIXEL_WIDTH - 6, h: WALL_WIDTH, primitive_marker: :solid, **FGCOLOUR}
     state.player ||= {
       x: PIXEL_WIDTH / 2, y: 12, 
       w: 32, h: 12, 
@@ -84,6 +96,8 @@ class Game
       speedx: 0, speedy: -2, 
       bounces: 0,
     }
+    state.score ||= 0
+    state.hiscore ||= 0
     state.game_over ||= false
     state.level_loaded ||= false
     state.ball_in_play ||= false
@@ -96,11 +110,14 @@ class Game
   end
 
   def render
-    canvas.sprites << state.player
-    canvas.sprites << state.ceiling
+    unless state.score == 0
+      canvas.primitives << xl_label.merge(x: 9, y: 7, text: "#{state.score}", r: 255, g: 255, b: 255, a: 110, anchor_y: 0.5)
+    end
+    canvas.primitives << state.player
+    canvas.primitives << state.ball unless state.game_over
+    canvas.primitives << state.ceiling
     canvas.sprites << state.walls
     canvas.sprites << state.bricks
-    canvas.sprites << state.ball unless state.game_over
 
     args.outputs.watch "FPS: #{GTK.current_framerate.to_sf}"
     args.outputs.watch "Number of bricks #{state.bricks.length}"
@@ -193,6 +210,8 @@ class Game
 
         brick.destroyed = true
 
+        state.score += brick.score_value
+
         if state.ball.y <= brick.y || state.ball.y >= brick.y + brick.h
           state.ball.speedy *= -1
         else
@@ -258,7 +277,7 @@ class Game
   end
 
   def brick_prefab
-    { x: 0, y: 0, w: 32, h: 10, path: :solid, **FGCOLOUR }
+    { x: 0, y: 0, w: 32, h: 10, path: :solid, **FGCOLOUR, score_value: 5 }
   end
 
   def play_bounce_sfx
@@ -283,7 +302,8 @@ class Game
         canvas.labels << lg_label.merge(x: 166, y: 100, text: "OVER", **BGCOLOUR)
       end
       if state.rect_filled_at.elapsed_time > 90
-        canvas.primitives << {x: PIXEL_WIDTH / 2, y: 70, w: 124, h: 60, path: :solid, **BGCOLOUR, anchor_x: 0.5, anchor_y: 0.5}
+        canvas.primitives << {x: PIXEL_WIDTH / 2, y: 90, w: 92, h: 20, path: :solid, **BGCOLOUR, anchor_x: 0.5, anchor_y: 0.5}
+        state.game_over_finished = true
       end
     end
   end
