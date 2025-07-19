@@ -1,7 +1,7 @@
 class Game
-  attr :args, :player
+  attr :args, :score
 
   def initialize
-    @player = Player.new
+    @score = 0
   end
 end
