@@ -3,7 +3,7 @@ class LevelScene
 
   def initialize game
     @game = game
-    @player = Player.new # maybe move back to Game? or use args.state?
+    @player = game.player
   end
 
   # id for scene lookup
